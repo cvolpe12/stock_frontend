@@ -14,24 +14,35 @@ class Portfolio extends React.Component {
 		})
 	}
 
-  findStock = (e) => {
+  buyStock = (e) => {
     e.preventDefault()
-    fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${this.state.ticker}&apikey=O5GDC24ELGAH28VW`)
-      .then(res => res.json())
-      .then(data => {
-        console.log("fetched");
-        this.setState({
-          stockInfo: data
-        })
-        console.log(this.state.stockInfo);
+    fetch(`http://localhost:3000/api/v1/investments`, {
+      method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept": "application/json",
+			},
+			body: JSON.stringify({
+        ticker: this.state.ticker,
+        shares: this.state.shares,
+        user_id: 1
       })
+		})
+		.then(res => res.json())
+    .then(data => {
+      debugger
+      this.setState({
+        stockInfo: data
+      })
+      console.log(this.state.stockInfo);
+    })
   }
 
   render() {
     return (
       <div>
         <h1>Portfolio</h1>
-        <form onSubmit={this.findStock}>
+        <form onSubmit={this.buyStock}>
           <input type="text" value={this.state.ticker} name="ticker" onChange={this.handleChange} placeholder="Ticker"></input>
           <br/>
           <input type="text" value={this.state.shares} name="shares" onChange={this.handleChange} placeholder="Shares"></input>

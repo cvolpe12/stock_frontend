@@ -1,6 +1,6 @@
 
 const initialState = {
-  allUserStocks = []
+  allUserStocks: []
 }
 
 function reducer(state = initialState, action){
