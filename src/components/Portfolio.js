@@ -1,4 +1,7 @@
 import React from "react";
+import { connect } from "react-redux"
+import { Link } from "react-router-dom";
+
 
 class Portfolio extends React.Component {
 
@@ -14,8 +17,18 @@ class Portfolio extends React.Component {
 		})
 	}
 
+  logout = () => {
+		// localStorage.removeItem("token")
+    console.log("logging out");
+		this.props.logUserOut()
+    localStorage.removeItem('jwt')
+    this.props.history.push(`/`)
+	}
+
   buyStock = (e) => {
     e.preventDefault()
+    debugger
+    console.log(this.props.currentUser);
     fetch(`http://localhost:3000/api/v1/investments`, {
       method: "POST",
 			headers: {
@@ -25,12 +38,11 @@ class Portfolio extends React.Component {
 			body: JSON.stringify({
         ticker: this.state.ticker,
         shares: this.state.shares,
-        user_id: 1
+        user_id: this.props.currentUser.id
       })
 		})
 		.then(res => res.json())
     .then(data => {
-      debugger
       this.setState({
         stockInfo: data
       })
@@ -39,6 +51,7 @@ class Portfolio extends React.Component {
   }
 
   render() {
+    console.log(this.props.currentUser.id);
     return (
       <div>
         <h1>Portfolio</h1>
@@ -49,8 +62,23 @@ class Portfolio extends React.Component {
           <br/>
           <button type="submit" >Buy</button>
         </form>
+        <button type="button" onClick={this.logout}>Logout</button>
       </div>
     )
   }
 }
-export default Portfolio
+
+
+function mapStateToProps(state){
+  return {
+    currentUser: state.currentUser
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return {
+    logUserOut: () => {dispatch({type: "LOGOUT"})},
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Portfolio)

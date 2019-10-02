@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 class Login extends React.Component {
 
   state = {
-    username: "",
+    email: "",
     password: ""
   }
 
@@ -37,7 +37,7 @@ class Login extends React.Component {
           // debugger
 					this.props.setCurrentUser(response.user)
 					localStorage.setItem('jwt', response.jwt)
-					this.props.history.push(`/users/${response.user.id}`)
+					this.props.history.push(`/portfolio`)
 				}
 			})
 	}
@@ -48,13 +48,12 @@ class Login extends React.Component {
       <div className="application">
       <br/><br/><br/><br/><br/>
       <div className="welcome">
-        <h1 className="logo-login">FanDraft</h1>
-        <h3 className="welcome-font">Login</h3>
+        <h3 className="welcome-font">Sign In</h3>
         <div>
         <Form inverted onSubmit={this.handleSubmit}>
           <Form.Field>
-            <label>Username</label>
-            <input name="username" value={this.state.username} placeholder='Username' onChange={this.handleChange}/>
+            <label>Email</label>
+            <input name="email" value={this.state.email} placeholder='Email' onChange={this.handleChange}/>
           </Form.Field>
           <Form.Field>
             <label>Password</label>
