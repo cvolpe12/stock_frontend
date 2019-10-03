@@ -11,6 +11,17 @@ class Portfolio extends React.Component {
     stockInfo: ""
   }
 
+  // componentDidMount() {
+  //   console.log("portfolio");
+  //   fetch(`http://localhost:3000/api/v1/investments`)
+  //     .then(res => res.json())
+  //     .then(investments => {
+  //       // debugger
+  //       let userInvestments = investments.filter(investment => investment.user_id === parseInt(this.props.currentUser.id))
+  //       this.props.getInvestments(userInvestments)
+  //     })
+  // }
+
   handleChange = (e) => {
 		this.setState({
 			[e.target.name]: e.target.value
@@ -27,8 +38,6 @@ class Portfolio extends React.Component {
 
   buyStock = (e) => {
     e.preventDefault()
-    debugger
-    console.log(this.props.currentUser);
     fetch(`http://localhost:3000/api/v1/investments`, {
       method: "POST",
 			headers: {
@@ -50,18 +59,35 @@ class Portfolio extends React.Component {
     })
   }
 
+  renderPortfolio = () => {
+    console.log(this.props.allInvestments);
+    if (this.props.allInvestments){
+      return this.props.allInvestments.map(investment => {
+        return (
+          <h4 key={investment.id}>{investment.ticker} - {investment.shares} ${investment.shares* investment.current_price}</h4>
+        )
+      })
+    } else {
+      return null
+    }
+  }
+
   render() {
-    console.log(this.props.currentUser.id);
     return (
       <div>
-        <h1>Portfolio</h1>
-        <form onSubmit={this.buyStock}>
-          <input type="text" value={this.state.ticker} name="ticker" onChange={this.handleChange} placeholder="Ticker"></input>
-          <br/>
-          <input type="text" value={this.state.shares} name="shares" onChange={this.handleChange} placeholder="Shares"></input>
-          <br/>
-          <button type="submit" >Buy</button>
-        </form>
+        <h1>Portfolio (${this.props.currentUser.balance})</h1>
+        <div className="portfolio">
+          {this.renderPortfolio()}
+        </div>
+        <div className="buyForm">
+          <form onSubmit={this.buyStock}>
+            <input type="text" value={this.state.ticker} name="ticker" onChange={this.handleChange} placeholder="Ticker"></input>
+            <br/>
+            <input type="text" value={this.state.shares} name="shares" onChange={this.handleChange} placeholder="Shares"></input>
+            <br/>
+            <button type="submit" >Buy</button>
+          </form>
+        </div>
         <button type="button" onClick={this.logout}>Logout</button>
       </div>
     )
@@ -71,12 +97,14 @@ class Portfolio extends React.Component {
 
 function mapStateToProps(state){
   return {
+    allInvestments: state.allInvestments,
     currentUser: state.currentUser
   }
 }
 
 function mapDispatchToProps(dispatch){
   return {
+    getInvestments: (stocks) => {dispatch({type: "GET_INVESTMENTS", payload: stocks})},
     logUserOut: () => {dispatch({type: "LOGOUT"})},
   }
 }
