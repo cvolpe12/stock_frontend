@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { Component, Fragment } from 'react';
 import './App.css';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 import Portfolio from './components/Portfolio'
 import Transactions from './components/Transactions'
 import Login from "./components/Login"
@@ -39,9 +38,39 @@ class App extends Component {
       })
   }
 
+  logout = () => {
+		// localStorage.removeItem("token")
+    console.log("logging out");
+		this.props.logUserOut()
+    localStorage.removeItem('jwt')
+	}
+
+  renderNav = () => {
+    if (this.props.currentUser) {
+      return(
+        <Fragment>
+          <Link to={`/portfolio`}>
+            Portfolio
+          </Link> |
+          <Link to={`/transactions`}>
+            Transactions
+          </Link> |
+          <Link to={`/`} onClick={this.logout}>
+            Log Out
+          </Link>
+        </Fragment>
+      )
+    } else {
+      return null
+    }
+  }
+
   render() {
     return (
       <div className="App">
+      <div className="nav">
+        {this.renderNav()}
+      </div>
       <Switch>
         <Route path="/" exact render={routerProps =>  <Login {...routerProps}/>} />
         <Route path="/portfolio" render={routerProps => <Portfolio {...routerProps}/>} />
@@ -57,7 +86,6 @@ function mapStateToProps(state){
   return {
     currentUser: state.currentUser,
     allInvestments: state.allInvestments,
-    currentUser: state.currentUser
   }
 }
 

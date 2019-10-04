@@ -20,3 +20,45 @@
 .App-link {
   color: #09d3ac;
 }
+/* -------------------------------------------------------------------------- */
+
+/* .nav {
+  float: right;
+  margin-left: 10%;
+} */
+
+.transactions {
+  float: left;
+  margin-left: 50px;
+}
+
+.portfolio {
+  float: left;
+  margin-left: 50px;
+  padding-right: 50px;
+  /* border-right: 1px solid black; */
+}
+
+.investment {
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+}
+
+.pageTitle {
+  /* float: left; */
+  /* margin-left: 50px; */
+}
+
+.vl {
+  border-left: 6px solid black;
+  height: 500px;
+  position: fixed;
+  left: 50%;
+  margin-left: -3px;
+  top: 15%;
+}
+
+.buyForm {
+  float: right;
+  padding-right: 100px;
+}

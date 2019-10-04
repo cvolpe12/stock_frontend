@@ -12,6 +12,8 @@ function reducer(state = initialState, action){
       return {...state, currentUser: action.payload}
     case "LOGOUT":
       return {...state, currentUser: ""}
+    case "ADD_INVESTMENT":
+      return {...state, allInvestments: [...state.allInvestments, action.payload]}
     default:
       return state
   }

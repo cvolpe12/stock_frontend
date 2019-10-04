@@ -7,7 +7,7 @@ class Transactions extends React.Component {
     if (this.props.allInvestments){
       return this.props.allInvestments.map(investment => {
         return (
-          <h4 key={investment.id}> BUY ({investment.ticker}) - {investment.shares} Shares @  ${investment.price_per_share}</h4>
+          <h4 key={investment.id} className="investment"> BUY ({investment.ticker}) - {investment.shares} Shares @  ${investment.price_per_share}</h4>
         )
       })
     } else {
@@ -17,8 +17,8 @@ class Transactions extends React.Component {
 
   render() {
     return (
-      <div>
-      <h1>Transactions</h1>
+      <div className="transactions">
+        <h1 className="pageTitle">Transactions</h1>
         {this.renderTransactions()}
       </div>
     )

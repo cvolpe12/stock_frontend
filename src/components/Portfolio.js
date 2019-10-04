@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux"
-import { Link } from "react-router-dom";
 
 
 class Portfolio extends React.Component {
@@ -8,32 +7,13 @@ class Portfolio extends React.Component {
   state = {
     ticker: "",
     shares: "",
-    stockInfo: ""
   }
 
-  // componentDidMount() {
-  //   console.log("portfolio");
-  //   fetch(`http://localhost:3000/api/v1/investments`)
-  //     .then(res => res.json())
-  //     .then(investments => {
-  //       // debugger
-  //       let userInvestments = investments.filter(investment => investment.user_id === parseInt(this.props.currentUser.id))
-  //       this.props.getInvestments(userInvestments)
-  //     })
-  // }
 
   handleChange = (e) => {
 		this.setState({
 			[e.target.name]: e.target.value
 		})
-	}
-
-  logout = () => {
-		// localStorage.removeItem("token")
-    console.log("logging out");
-		this.props.logUserOut()
-    localStorage.removeItem('jwt')
-    this.props.history.push(`/`)
 	}
 
   buyStock = (e) => {
@@ -51,11 +31,8 @@ class Portfolio extends React.Component {
       })
 		})
 		.then(res => res.json())
-    .then(data => {
-      this.setState({
-        stockInfo: data
-      })
-      console.log(this.state.stockInfo);
+    .then(stock => {
+      this.props.addInvestment(stock)
     })
   }
 
@@ -64,7 +41,7 @@ class Portfolio extends React.Component {
     if (this.props.allInvestments){
       return this.props.allInvestments.map(investment => {
         return (
-          <h4 key={investment.id}>{investment.ticker} - {investment.shares} ${investment.shares* investment.current_price}</h4>
+          <h4 key={investment.id} className="investment">{investment.ticker} - {investment.shares} Shares ${investment.shares* investment.current_price}</h4>
         )
       })
     } else {
@@ -75,12 +52,14 @@ class Portfolio extends React.Component {
   render() {
     return (
       <div>
-        <h1>Portfolio (${this.props.currentUser.balance})</h1>
         <div className="portfolio">
+          <h1 className="pageTitle">Portfolio (${this.props.currentUser.balance})</h1>
           {this.renderPortfolio()}
         </div>
+        <div className="vl"></div>
         <div className="buyForm">
           <form onSubmit={this.buyStock}>
+            <h3>Cash - ${this.props.currentUser.balance}</h3>
             <input type="text" value={this.state.ticker} name="ticker" onChange={this.handleChange} placeholder="Ticker"></input>
             <br/>
             <input type="text" value={this.state.shares} name="shares" onChange={this.handleChange} placeholder="Shares"></input>
@@ -88,7 +67,6 @@ class Portfolio extends React.Component {
             <button type="submit" >Buy</button>
           </form>
         </div>
-        <button type="button" onClick={this.logout}>Logout</button>
       </div>
     )
   }
@@ -106,6 +84,7 @@ function mapDispatchToProps(dispatch){
   return {
     getInvestments: (stocks) => {dispatch({type: "GET_INVESTMENTS", payload: stocks})},
     logUserOut: () => {dispatch({type: "LOGOUT"})},
+    addInvestment: (stock) => {dispatch({type: "ADD_INVESTMENT", payload: stock})}
   }
 }
 
