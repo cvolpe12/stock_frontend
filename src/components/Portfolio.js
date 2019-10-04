@@ -36,6 +36,10 @@ class Portfolio extends React.Component {
       if (stock.errors) {
 				alert(stock.errors)
 			} else {
+      this.setState({
+        ticker: "",
+        shares: ""
+      })
       this.props.addInvestment(stock)
       fetch(`http://localhost:3000/api/v1/users/${this.props.currentUser.id}`, {
         method: "PATCH",
@@ -55,12 +59,42 @@ class Portfolio extends React.Component {
     })
   }
 
+  stockStatus = inv => {
+    if (inv.current_price < inv.open_price) {
+      return {color:"Red"}
+    } else if (inv.current_price > inv.open_price) {
+      return {color:"green"}
+    } else if (inv.current_price === inv.open_price) {
+      return {color:"grey"}
+    }
+  }
+
+  // updateStocks = () => {
+  //   fetch(`http://localhost:3000/api/v1/investments/${investment.id}`, {
+  //     method: "PATCH",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Accept": "application/json",
+  //     },
+  //   })
+  //   .then(res => res.json())
+  //   .then(stock => {
+  //     return (
+  //       <h4 key={investment.id} className="investment" style={this.stockStatus(investment)}>
+  //       {investment.ticker} - {investment.shares} Shares ${(investment.shares* investment.current_price).toFixed(2)}
+  //       </h4>
+  //     )
+  //   })
+  // }
+
   renderPortfolio = () => {
     // console.log(this.props.allInvestments)
     if (this.props.allInvestments){
       return this.props.allInvestments.map(investment => {
         return (
-          <h4 key={investment.id} className="investment">{investment.ticker} - {investment.shares} Shares ${(investment.shares* investment.current_price).toFixed(2)}</h4>
+          <h4 key={investment.id} className="investment" style={this.stockStatus(investment)}>
+          {investment.ticker} - {investment.shares} Shares ${(investment.shares* investment.current_price).toFixed(2)}
+          </h4>
         )
       })
     } else {
@@ -76,9 +110,9 @@ class Portfolio extends React.Component {
     return investing.toFixed(2)
   }
 
+
+
   render() {
-    console.log(this.state);
-    console.log(this.props.currentUser);
     return (
       <div>
         <div className="portfolio">
