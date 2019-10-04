@@ -59,19 +59,15 @@ class SignUpForm extends React.Component {
         <div>
     			<Form inverted onSubmit={this.handleSubmit}>
     		    <Form.Field>
-    		      <label className="label-color">Name</label>
     		      <input onChange={this.handleChange} name="name" value={this.state.name} placeholder='Name' />
     		    </Form.Field>
     		    <Form.Field>
-    		      <label className="label-color">Email</label>
     		      <input onChange={this.handleChange} name="email" value={this.state.email} placeholder='Email' />
     		    </Form.Field>
     		    <Form.Field>
-    		      <label className="label-color">Password</label>
     		      <input onChange={this.handleChange} type="password" name="password" value={this.state.password} placeholder='Password' />
     		    </Form.Field>
     		    <Form.Field>
-    		      <label className="label-color">Password Confirmation</label>
     		      <input onChange={this.handleChange} type="password" name="passwordConfirmation" value={this.state.passwordConfirmation} placeholder='Password Confirmation' />
     		    </Form.Field>
     		    <Button type='submit'>Create Account</Button>

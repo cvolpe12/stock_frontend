@@ -52,11 +52,9 @@ class Login extends React.Component {
         <div>
         <Form inverted onSubmit={this.handleSubmit}>
           <Form.Field>
-            <label>Email</label>
             <input name="email" value={this.state.email} placeholder='Email' onChange={this.handleChange}/>
           </Form.Field>
           <Form.Field>
-            <label>Password</label>
             <input type="password" name="password" value={this.state.password} placeholder='Password' onChange={this.handleChange}/>
           </Form.Field>
           <Button type='submit'>Login</Button>
