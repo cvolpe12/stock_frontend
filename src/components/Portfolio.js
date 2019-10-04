@@ -7,6 +7,7 @@ class Portfolio extends React.Component {
   state = {
     ticker: "",
     shares: "",
+    currentStock: ""
   }
 
 
@@ -32,16 +33,34 @@ class Portfolio extends React.Component {
 		})
 		.then(res => res.json())
     .then(stock => {
+      if (stock.errors) {
+				alert(stock.errors)
+			} else {
       this.props.addInvestment(stock)
+      fetch(`http://localhost:3000/api/v1/users/${this.props.currentUser.id}`, {
+        method: "PATCH",
+  			headers: {
+  				"Content-Type": "application/json",
+  				"Accept": "application/json",
+  			},
+  			body: JSON.stringify({
+          balance: this.props.currentUser.balance - (parseInt(stock.shares)* parseInt(stock.current_price))
+        })
+  		})
+      .then(res => res.json())
+      .then(user => {
+        this.props.setCurrentUser(user)
+        })
+      }
     })
   }
 
   renderPortfolio = () => {
-    console.log(this.props.allInvestments);
+    // console.log(this.props.allInvestments)
     if (this.props.allInvestments){
       return this.props.allInvestments.map(investment => {
         return (
-          <h4 key={investment.id} className="investment">{investment.ticker} - {investment.shares} Shares ${investment.shares* investment.current_price}</h4>
+          <h4 key={investment.id} className="investment">{investment.ticker} - {investment.shares} Shares ${(investment.shares* investment.current_price).toFixed(2)}</h4>
         )
       })
     } else {
@@ -49,11 +68,21 @@ class Portfolio extends React.Component {
     }
   }
 
+  renderInvesting = () => {
+    let investing = 0
+    this.props.allInvestments.forEach(inv =>{
+      investing += (inv.shares* inv.current_price)
+    })
+    return investing.toFixed(2)
+  }
+
   render() {
+    console.log(this.state);
+    console.log(this.props.currentUser);
     return (
       <div>
         <div className="portfolio">
-          <h1 className="pageTitle">Portfolio (${this.props.currentUser.balance})</h1>
+          <h1 className="pageTitle">Portfolio (${this.renderInvesting()})</h1>
           {this.renderPortfolio()}
         </div>
         <div className="vl"></div>
@@ -82,6 +111,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
   return {
+    setCurrentUser: (user) => {dispatch({type: "SET_CURRENT_USER", payload: user })},
     getInvestments: (stocks) => {dispatch({type: "GET_INVESTMENTS", payload: stocks})},
     logUserOut: () => {dispatch({type: "LOGOUT"})},
     addInvestment: (stock) => {dispatch({type: "ADD_INVESTMENT", payload: stock})}

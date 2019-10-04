@@ -25,17 +25,18 @@ class App extends Component {
 					alert(response.errors)
 				} else {
 					this.props.setCurrentUser(response)
+          this.props.getInvestments(response.investments)
 				}
 			})
 		}
-    console.log("investment");
-    fetch(`http://localhost:3000/api/v1/investments`)
-      .then(res => res.json())
-      .then(investments => {
-        // debugger
-        let userInvestments = investments.filter(investment => investment.user_id === parseInt(this.props.currentUser.id))
-        this.props.getInvestments(userInvestments)
-      })
+    // console.log("investment");
+    // fetch(`http://localhost:3000/api/v1/investments`)
+    //   .then(res => res.json())
+    //   .then(investments => {
+    //     // debugger
+    //     let userInvestments = investments.filter(investment => investment.user_id === parseInt(this.props.currentUser.id))
+    //     this.props.getInvestments(userInvestments)
+    //   })
   }
 
   logout = () => {
@@ -51,7 +52,7 @@ class App extends Component {
         <Fragment>
           <Link to={`/portfolio`}>
             Portfolio
-          </Link> |
+          </Link> | 
           <Link to={`/transactions`}>
             Transactions
           </Link> |
